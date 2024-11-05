@@ -1,0 +1,95 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} 
+
+{% block style %}
+    body { background-color: #f5f5f5; }
+    .container { margin-top: 50px; }
+    .header { text-align: center; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid black; text-align: center; padding: 8px; }
+    th { background-color: #e0e0e0; }
+    td { background-color: #fff; }
+    .form-field { margin-bottom: 10px; }
+    .submit-btn {
+        background-color: #900; /* Same as the nav bar color */
+        color: white;
+        padding: 10px 20px; 
+        margin-top: 20px;}
+
+    /* Make table responsive */
+    @media (max-width: 992px) {
+        table { width: 100%; display: block; overflow-x: auto; white-space: nowrap; }
+        input[type="text"], input[type="number"] { width: 50px; padding: 4px; font-size: 0.8em; }
+        .submit-btn { padding: 5px 10px; font-size: 0.8em; }
+    }
+{% endblock %} 
+
+{% block content%}
+    <main class="container">
+        <header class="header">
+            <h1>DEPARTMENT OF MATHEMATICS</h1>
+            <h2>SOUTHEAST MISSOURI STATE UNIVERSITY</h2>
+            <h3>SEMESTER GRADE DATA</h3>
+        </header>
+
+        <br />
+        <br />
+        <h2>DATA</h2>
+        <br>
+        
+
+        {% for semester in Semesters %}
+            <h2>{{ semester.semester_name }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course Number</th>
+                        <th>Section Number</th>
+                        <th>Professor</th>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>C</th>
+                        <th>D</th>
+                        <th>F</th>
+                        <th>X</th>
+                        <th>I</th>
+                        <th>CR</th>
+                        <th>TOTAL</th>
+                        <th>Pass Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for courses in semester.courses %}
+                        {% for gradeDistributions in courses.gradeDistributions %}
+                            <tr>
+                                <td>{{ courses.course_number }}</td>
+                                <td>{{ courses.section_number }}</td>
+                                <td>{{ user.query.get(courses.user_id).first_name + " " + user.query.get(courses.user_id).last_name}}</td>
+                                <td>{{ gradeDistributions.A_count }}</td>
+                                <td>{{ gradeDistributions.B_count}}</td>
+                                <td>{{ gradeDistributions.C_count}}</td>
+                                <td>{{ gradeDistributions.D_count}}</td>
+                                <td>{{ gradeDistributions.F_count}}</td>
+                                <td>{{ gradeDistributions.X_count}}</td>
+                                <td>{{ gradeDistributions.I_count}}</td>
+                                <td>{{ gradeDistributions.CR_count}}</td>
+                                <td>{{ gradeDistributions.total_count}}</td>
+                                <td>
+                                    {{ ((gradeDistributions.A_count + gradeDistributions.B_count + gradeDistributions.C_count + gradeDistributions.CR_count) / gradeDistributions.total_count * 100) | round(2) }}%
+                                </td>
+                                <td><button type="button" class="close" onClick="deleteDistribution({{ gradeDistributions.distribution_id }})">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <p>
+                <a href="{{ url_for('views.download_csv', semester_name=semester.semester_name) }}">Download CSV File</a>
+            </p>
+        {% endfor %}
+
+    </main>
+{% endblock %}

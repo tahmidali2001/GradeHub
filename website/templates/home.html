@@ -1,0 +1,124 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} 
+
+{% block style %}
+    body { background-color: #f5f5f5; }
+    .container { margin-top: 50px; }
+    .header { text-align: center; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid black; text-align: center; padding: 8px; }
+    th { background-color: #e0e0e0; }
+    td { background-color: #fff; }
+    .form-field { margin-bottom: 10px; }
+    .submit-btn {
+        background-color: #900; /* Same as the nav bar color */
+        color: white;
+        padding: 10px 20px; 
+        margin-top: 20px;}
+
+    /* Make table responsive */
+    @media (max-width: 992px) {
+        table { width: 100%; display: block; overflow-x: auto; white-space: nowrap; }
+        input[type="text"], input[type="number"] { width: 50px; padding: 4px; font-size: 0.8em; }
+        .submit-btn { padding: 5px 10px; font-size: 0.8em; }
+    }
+{% endblock %} 
+
+{% block content%}
+    <main class="container">
+        <header class="header">
+            <h1>DEPARTMENT OF MATHEMATICS</h1>
+            <h2>SOUTHEAST MISSOURI STATE UNIVERSITY</h2>
+            <h3>SEMESTER GRADE REPORT FORM</h3>
+        </header>
+        <form method="POST">
+            <div class="form-field">
+                <label for="semester">Semester</label>
+                <input type="text" id="semester" name="semester" required>
+            </div>
+
+            <div class = "table-responsive">  
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course Number</th>
+                            <th>Sec. No</th>
+                            <th>A</th>
+                            <th>B</th>
+                            <th>C</th>
+                            <th>D</th>
+                            <th>F</th>
+                            <th>X</th>
+                            <th>I</th>
+                            <th>CR</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="course_number[]" required></td>
+                            <td><input type="text" name="section_number[]" required></td>
+                            <td><input type="number" name="A_count[]" min="0" required></td>
+                            <td><input type="number" name="B_count[]" min="0" required></td>
+                            <td><input type="number" name="C_count[]" min="0" required></td>
+                            <td><input type="number" name="D_count[]" min="0" required></td>
+                            <td><input type="number" name="F_count[]" min="0" required></td>
+                            <td><input type="number" name="X_count[]" min="0" required></td>
+                            <td><input type="number" name="I_count[]" min="0" required></td>
+                            <td><input type="number" name="CR_count[]" min="0" required></td>
+                            <td><input type="number" name="total[]" min="0" required></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Grades</button>
+        </form>
+
+        <br />
+        <br />
+        <h2>Previous Submissions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Semester</th>
+                    <th>Course Number</th>
+                    <th>Section Number</th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                    <th>D</th>
+                    <th>F</th>
+                    <th>X</th>
+                    <th>I</th>
+                    <th>CR</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for courses in user.courses %}
+                    {% for gradeDistributions in courses.gradeDistributions %}
+                        <tr>
+                            <td>{{ Semesters.query.get(courses.semester_id).semester_name }}</td>
+                            <td>{{ courses.course_number }}</td>
+                            <td>{{ courses.section_number }}</td>
+                            <td>{{ gradeDistributions.A_count }}</td>
+                            <td>{{ gradeDistributions.B_count}}</td>
+                            <td>{{ gradeDistributions.C_count}}</td>
+                            <td>{{ gradeDistributions.D_count}}</td>
+                            <td>{{ gradeDistributions.F_count}}</td>
+                            <td>{{ gradeDistributions.X_count}}</td>
+                            <td>{{ gradeDistributions.I_count}}</td>
+                            <td>{{ gradeDistributions.CR_count}}</td>
+                            <td>{{ gradeDistributions.total_count}}</td>
+                            <td><button type="button" class="close" onClick="deleteDistribution({{ gradeDistributions.distribution_id }})">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </main>
+{% endblock %}
+    

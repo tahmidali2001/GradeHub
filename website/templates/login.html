@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+
+
+{% block style %}
+body { background-color: #f5f5f5; }
+        .container { max-width: 500px; margin-top: 50px; }
+        .header { background-color: #900; color: white; padding: 1rem; text-align: center; }
+        .login-form { background-color: white; padding: 2rem; }
+        .login-form button { background-color: #900; color: white; }
+
+{% endblock %}
+
+
+{% block content %}
+
+<main class="container">
+    <section class="header">
+        <h2>Welcome to the Math Department</h2>
+    </section>
+    <section class="login-form">
+        <form method="POST">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Enter email"
+              />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Enter password"
+              />
+            </div>
+            <br />
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+    </section>
+</main>
+
+{% endblock %}
